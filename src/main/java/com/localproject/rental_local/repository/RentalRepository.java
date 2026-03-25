@@ -5,6 +5,7 @@ import com.localproject.rental_local.enums.RentalStatus;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface RentalRepository extends JpaRepository<Rental, Long> {
 
@@ -20,5 +21,9 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
             LocalDate startDate,
             LocalDate endDate
     );
+
+    long countByStatus(RentalStatus status);
+
+    long countByStatusAndEndDateBefore(RentalStatus status, LocalDate date);
 }
 

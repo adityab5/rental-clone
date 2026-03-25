@@ -5,6 +5,7 @@ import com.localproject.rental_local.enums.Role;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
@@ -15,5 +16,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmailAndIsDeletedFalse(String email);
 
     List<User> findAllByRoleAndIsDeletedFalse(Role role);
+
+    List<User> findAllByOrderByCreatedAtDesc();
+
+    long countByIsDeletedFalse();
+
+    long countByIsDeletedTrue();
 }
 
