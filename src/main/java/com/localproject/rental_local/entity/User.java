@@ -1,6 +1,6 @@
 package com.localproject.rental_local.entity;
 
-import com.localproject.rental_local.enums.UserRole;
+import com.localproject.rental_local.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -53,7 +53,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
-    private UserRole role;
+    private Role role;
 
     @Builder.Default
     @Column(name = "is_deleted", nullable = false, columnDefinition = "BIT(1) DEFAULT b'0'")

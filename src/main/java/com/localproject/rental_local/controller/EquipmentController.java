@@ -17,7 +17,7 @@ public class EquipmentController {
 
     private final EquipmentService equipmentService;
 
-    @GetMapping("/available")
+    @GetMapping("/")
     public List<EquipmentDto> getAvailableEquipment(
             @RequestParam(required = false) EquipmentCategory category
     ) {
