@@ -52,6 +52,12 @@ public class Payment extends BaseEntity {
     @Column(name = "gateway_ref", length = 100)
     private String gatewayRef;
 
+    @Column(name = "gateway_payment_id", length = 100)
+    private String gatewayPaymentId;
+
+    @Column(name = "gateway_signature", length = 255)
+    private String gatewaySignature;
+
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
 
