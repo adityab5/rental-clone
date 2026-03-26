@@ -1,10 +1,10 @@
 package com.localproject.rental_local.service;
 
 import com.localproject.rental_local.config.RazorpayProperties;
-import com.localproject.rental_local.dto.CreatePaymentOrderRequest;
-import com.localproject.rental_local.dto.CreatePaymentOrderResponse;
-import com.localproject.rental_local.dto.VerifyPaymentRequest;
-import com.localproject.rental_local.dto.VerifyPaymentResponse;
+import com.localproject.rental_local.dto.request.CreatePaymentOrderRequest;
+import com.localproject.rental_local.dto.request.VerifyPaymentRequest;
+import com.localproject.rental_local.dto.response.CreatePaymentOrderResponse;
+import com.localproject.rental_local.dto.response.VerifyPaymentResponse;
 import com.localproject.rental_local.entity.Payment;
 import com.localproject.rental_local.entity.Rental;
 import com.localproject.rental_local.enums.PaymentStatus;
@@ -32,6 +32,7 @@ public class PaymentService {
     private final RazorpayGatewayClient razorpayGatewayClient;
     private final RazorpayProperties razorpayProperties;
     private final HmacSHA256Util hmacSHA256Util;
+    private final NotificationService notificationService;
 
     public CreatePaymentOrderResponse createOrder(CreatePaymentOrderRequest request) {
         Rental rental = rentalRepository.findById(request.rentalId())
@@ -115,6 +116,14 @@ public class PaymentService {
         payment.setPaidAt(LocalDateTime.now());
         Payment savedPayment = paymentRepository.save(payment);
 
+        try {
+            notificationService.sendPaymentSuccessEmail(savedPayment);
+        } catch (RuntimeException exception) {
+            // Payment status is already persisted; notification remains best-effort.
+            log.warn("Payment success email failed for paymentId={}, rentalId={}",
+                    savedPayment.getId(), savedPayment.getRental().getId(), exception);
+        }
+
         log.info("Payment signature verification success: paymentId={}, rentalId={}, orderId={}, paymentGatewayId={}",
                 savedPayment.getId(), savedPayment.getRental().getId(), requestOrderId, requestPaymentId);
 
@@ -128,6 +137,3 @@ public class PaymentService {
         );
     }
 }
-
-
-
