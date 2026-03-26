@@ -1,0 +1,223 @@
+===============================================================================
+RENTAL API - DATABASE POPULATION SCRIPT
+Target Database: rental_db
+Created: March 25, 2026
+===============================================================================
+
+INSTRUCTIONS:
+1. Open MySQL Workbench or MySQL CLI
+2. Select database: USE rental_db;
+3. Copy and paste all SQL below
+4. Execute
+5. Verify with verification queries at bottom
+
+===============================================================================
+PART 1: RESET TABLES (SAFE - only clears data, keeps schema)
+===============================================================================
+
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE reviews;
+TRUNCATE TABLE payments;
+TRUNCATE TABLE rentals;
+TRUNCATE TABLE equipment;
+TRUNCATE TABLE users;
+SET FOREIGN_KEY_CHECKS = 1;
+
+===============================================================================
+PART 2: INSERT USERS (5 total)
+===============================================================================
+
+-- User 1: Regular renter (USER role)
+INSERT INTO users (id, name, email, password, phone, role, is_deleted, created_at, updated_at)
+VALUES (1, 'John Doe', 'john@test.com', '$2a$10$dummy_hash_123', '9123456789', 'USER', b'0', NOW(), NOW());
+
+-- User 2: Another renter (USER role)
+INSERT INTO users (id, name, email, password, phone, role, is_deleted, created_at, updated_at)
+VALUES (2, 'Jane Smith', 'jane@test.com', '$2a$10$dummy_hash_456', '9987654321', 'USER', b'0', NOW(), NOW());
+
+-- User 3: Equipment seller 1 (SELLER role)
+INSERT INTO users (id, name, email, password, phone, role, is_deleted, created_at, updated_at)
+VALUES (3, 'Mike Seller', 'mike@seller.com', '$2a$10$dummy_hash_789', '9111111111', 'SELLER', b'0', NOW(), NOW());
+
+-- User 4: Equipment seller 2 (SELLER role)
+INSERT INTO users (id, name, email, password, phone, role, is_deleted, created_at, updated_at)
+VALUES (4, 'Sarah Vendor', 'sarah@seller.com', '$2a$10$dummy_hash_000', '9222222222', 'SELLER', b'0', NOW(), NOW());
+
+-- User 5: Admin (ADMIN role)
+INSERT INTO users (id, name, email, password, phone, role, is_deleted, created_at, updated_at)
+VALUES (5, 'Admin User', 'admin@test.com', '$2a$10$dummy_hash_admin', '9333333333', 'ADMIN', b'0', NOW(), NOW());
+
+===============================================================================
+PART 3: INSERT EQUIPMENT (8 total - mix of categories, available and unavailable)
+===============================================================================
+
+-- Equipment 1: ELECTRONIC - Available (good for testing POST /api/rentals/)
+INSERT INTO equipment (id, name, description, category, daily_rate, is_available, seller_id, is_deleted, created_at, updated_at)
+VALUES (1, 'Sony Alpha A7R V', 'Professional mirrorless camera 61MP', 'ELECTRONIC', 150.00, b'1', 3, b'0', NOW(), NOW());
+
+-- Equipment 2: VEHICLE - Unavailable (has active rental)
+INSERT INTO equipment (id, name, description, category, daily_rate, is_available, seller_id, is_deleted, created_at, updated_at)
+VALUES (2, 'Honda Activa Scooter', 'City commute scooter, good fuel efficiency', 'VEHICLE', 80.00, b'0', 3, b'0', NOW(), NOW());
+
+-- Equipment 3: FURNITURE - Available
+INSERT INTO equipment (id, name, description, category, daily_rate, is_available, seller_id, is_deleted, created_at, updated_at)
+VALUES (3, 'Ergonomic Office Chair', 'Herman Miller style, height adjustable', 'FURNITURE', 25.00, b'1', 4, b'0', NOW(), NOW());
+
+-- Equipment 4: ELECTRONIC - Unavailable (has active overdue rental)
+INSERT INTO equipment (id, name, description, category, daily_rate, is_available, seller_id, is_deleted, created_at, updated_at)
+VALUES (4, 'DJI Air 3 Drone', '4K camera, 46min flight time', 'ELECTRONIC', 120.00, b'0', 4, b'0', NOW(), NOW());
+
+-- Equipment 5: VEHICLE - Available
+INSERT INTO equipment (id, name, description, category, daily_rate, is_available, seller_id, is_deleted, created_at, updated_at)
+VALUES (5, 'Mountain Bike (Trek)', '21-speed, suspension, perfect trails', 'VEHICLE', 35.00, b'1', 3, b'0', NOW(), NOW());
+
+-- Equipment 6: FURNITURE - Available
+INSERT INTO equipment (id, name, description, category, daily_rate, is_available, seller_id, is_deleted, created_at, updated_at)
+VALUES (6, 'Dining Table Set', '6-seater teak wood, excellent condition', 'FURNITURE', 50.00, b'1', 4, b'0', NOW(), NOW());
+
+-- Equipment 7: ELECTRONIC - Available
+INSERT INTO equipment (id, name, description, category, daily_rate, is_available, seller_id, is_deleted, created_at, updated_at)
+VALUES (7, 'Apple MacBook Pro 16"', 'M3 Max, 36GB RAM, pristine', 'ELECTRONIC', 100.00, b'1', 3, b'0', NOW(), NOW());
+
+-- Equipment 8: VEHICLE - Available
+INSERT INTO equipment (id, name, description, category, daily_rate, is_available, seller_id, is_deleted, created_at, updated_at)
+VALUES (8, 'Electric Scooter (Xiaomi)', 'Max speed 25kmh, 30km range', 'VEHICLE', 30.00, b'1', 4, b'0', NOW(), NOW());
+
+===============================================================================
+PART 4: INSERT RENTALS (3 test cases)
+===============================================================================
+
+-- Rental 1: ACTIVE (future dates - not overdue)
+-- User 1 renting Equipment 4 (DJI Drone) from tomorrow for 3 days
+INSERT INTO rentals (id, user_id, equipment_id, start_date, end_date, return_date, status, total_cost, created_at)
+VALUES (1, 1, 4, DATE_ADD(CURDATE(), INTERVAL 1 DAY), DATE_ADD(CURDATE(), INTERVAL 3 DAY), NULL, 'ACTIVE', 360.00, NOW());
+
+-- Rental 2: RETURNED (past dates - already returned)
+-- User 1 rented Equipment 3 (Chair) 10 days ago for 2 days, returned after 2 days
+INSERT INTO rentals (id, user_id, equipment_id, start_date, end_date, return_date, status, total_cost, created_at)
+VALUES (2, 1, 3, DATE_SUB(CURDATE(), INTERVAL 10 DAY), DATE_SUB(CURDATE(), INTERVAL 8 DAY), DATE_SUB(CURDATE(), INTERVAL 8 DAY), 'RETURNED', 50.00, NOW());
+
+-- Rental 3: ACTIVE & OVERDUE (end_date is past, not returned)
+-- User 2 rented Equipment 2 (Scooter) 6 days ago, was supposed to return 2 days ago, still has it
+INSERT INTO rentals (id, user_id, equipment_id, start_date, end_date, return_date, status, total_cost, created_at)
+VALUES (3, 2, 2, DATE_SUB(CURDATE(), INTERVAL 6 DAY), DATE_SUB(CURDATE(), INTERVAL 2 DAY), NULL, 'ACTIVE', 320.00, NOW());
+
+===============================================================================
+PART 5: INSERT PAYMENTS (optional but recommended for complete data)
+===============================================================================
+
+-- Payment 1: PENDING (for active rental 1)
+INSERT INTO payments (id, rental_id, user_id, amount, status, gateway_ref, paid_at, created_at)
+VALUES (1, 1, 1, 360.00, 'PENDING', NULL, NULL, NOW());
+
+-- Payment 2: SUCCESS (for returned rental 2)
+INSERT INTO payments (id, rental_id, user_id, amount, status, gateway_ref, paid_at, created_at)
+VALUES (2, 2, 1, 50.00, 'SUCCESS', 'TXN-2026-001', DATE_SUB(NOW(), INTERVAL 8 DAY), NOW());
+
+-- Payment 3: SUCCESS (for overdue rental 3)
+INSERT INTO payments (id, rental_id, user_id, amount, status, gateway_ref, paid_at, created_at)
+VALUES (3, 3, 2, 320.00, 'SUCCESS', 'TXN-2026-002', DATE_SUB(NOW(), INTERVAL 2 DAY), NOW());
+
+===============================================================================
+PART 6: INSERT REVIEWS (optional but useful for full schema testing)
+===============================================================================
+
+-- Review 1: User 1 reviews Equipment 3 (Chair)
+INSERT INTO reviews (id, user_id, equipment_id, rating, comment, created_at)
+VALUES (1, 1, 3, 5, 'Very comfortable and well-maintained. Great rental experience!', NOW());
+
+-- Review 2: User 2 reviews Equipment 2 (Scooter)
+INSERT INTO reviews (id, user_id, equipment_id, rating, comment, created_at)
+VALUES (2, 2, 2, 3, 'Good scooter but brakes need adjustment. Otherwise fine.', NOW());
+
+-- Review 3: User 1 reviews Equipment 4 (Drone)
+INSERT INTO reviews (id, user_id, equipment_id, rating, comment, created_at)
+VALUES (3, 1, 4, 4, 'Amazing drone, great quality. Wish rental period was longer.', NOW());
+
+===============================================================================
+PART 7: VERIFICATION QUERIES (Run these to confirm data is populated)
+===============================================================================
+
+-- Count by table
+SELECT 'Users' AS table_name, COUNT(*) AS total FROM users
+UNION ALL SELECT 'Equipment', COUNT(*) FROM equipment
+UNION ALL SELECT 'Rentals', COUNT(*) FROM rentals
+UNION ALL SELECT 'Payments', COUNT(*) FROM payments
+UNION ALL SELECT 'Reviews', COUNT(*) FROM reviews;
+
+-- List all users
+SELECT '=== USERS ===' AS '';
+SELECT id, name, email, role FROM users ORDER BY id;
+
+-- List all equipment with availability status
+SELECT '=== EQUIPMENT ===' AS '';
+SELECT id, name, category, daily_rate, IF(is_available=b'1','Available','Unavailable') AS status FROM equipment ORDER BY id;
+
+-- List all rentals with status
+SELECT '=== RENTALS ===' AS '';
+SELECT id, user_id, equipment_id, start_date, end_date, return_date, status, total_cost FROM rentals ORDER BY id DESC;
+
+-- List overdue rentals (should show rental id=3)
+SELECT '=== OVERDUE RENTALS ===' AS '';
+SELECT id, user_id, equipment_id, status, end_date FROM rentals WHERE status='ACTIVE' AND end_date < CURDATE();
+
+-- List available equipment (should show ids 1,3,5,6,7,8)
+SELECT '=== AVAILABLE EQUIPMENT ===' AS '';
+SELECT id, name, category, daily_rate FROM equipment WHERE is_available=b'1' ORDER BY id;
+
+===============================================================================
+PART 8: TEST DATA SUMMARY
+===============================================================================
+
+USERS:
+  ID  Role      Name              Email
+  1   USER      John Doe          john@test.com
+  2   USER      Jane Smith        jane@test.com
+  3   SELLER    Mike Seller       mike@seller.com
+  4   SELLER    Sarah Vendor      sarah@seller.com
+  5   ADMIN     Admin User        admin@test.com
+
+EQUIPMENT:
+  ID  Category    Name                    Available  Daily Rate
+  1   ELECTRONIC  Sony Camera             YES        $150.00
+  2   VEHICLE     Scooter                 NO         $80.00
+  3   FURNITURE   Office Chair            YES        $25.00
+  4   ELECTRONIC  DJI Drone               NO         $120.00
+  5   VEHICLE     Mountain Bike           YES        $35.00
+  6   FURNITURE   Dining Table Set        YES        $50.00
+  7   ELECTRONIC  MacBook Pro 16"         YES        $100.00
+  8   VEHICLE     Electric Scooter        YES        $30.00
+
+RENTALS:
+  ID  Status    Dates                     Overdue?
+  1   ACTIVE    Tomorrow to +3 days       NO (future)
+  2   RETURNED  10 days ago to 8 ago      NO (done)
+  3   ACTIVE    6 days ago to 2 ago       YES (overdue now)
+
+===============================================================================
+TESTING TIPS
+===============================================================================
+
+1. Test POST /api/rentals/ with:
+   userId: 1
+   equipmentId: 1 (only available equipment)
+   startDate: 2026-03-26 (tomorrow)
+   endDate: 2026-03-28 (3 days)
+   Expected cost: 150 * 3 = $450.00
+
+2. Test GET /api/rentals/ - Should list all 3 rentals + new one
+
+3. Test GET /api/rentals/overdue - Should return rental ID 3 (overdue)
+
+4. Test GET /api/rentals/{id} - Get details of specific rental
+
+5. Test POST /api/rentals/{id}/return - Mark any ACTIVE rental as RETURNED
+
+6. To trigger equipment unavailable error:
+   - Try to create rental with equipmentId: 2 or 4 (both have active rentals)
+   - Should get 400 "Equipment is not available"
+
+===============================================================================
+EOF
+===============================================================================
+

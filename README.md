@@ -31,6 +31,38 @@ Spring Boot rental management API.
 }
 ```
 
+## Payment API (Razorpay Backend Only)
+
+- `POST /api/payments/create-order` - Create Razorpay order and persist pending payment
+- `POST /api/payments/verify` - Verify signature (`order_id|payment_id`) and update status
+
+### Create Order Example
+
+```json
+{
+  "rentalId": 1
+}
+```
+
+### Verify Payment Example (Postman Simulation)
+
+```json
+{
+  "rentalId": 1,
+  "razorpayOrderId": "order_abc123",
+  "razorpayPaymentId": "pay_xyz789",
+  "razorpaySignature": "<hmac_sha256_signature>"
+}
+```
+
+### Razorpay Config
+
+Set credentials via environment variables or `application-dev.properties`:
+
+- `RAZORPAY_KEY_ID`
+- `RAZORPAY_KEY_SECRET`
+- `RAZORPAY_CURRENCY` (default: `INR`)
+
 ## What Was Added
 
 - Entity repositories under `src/main/java/com/localproject/rental_local/repository`

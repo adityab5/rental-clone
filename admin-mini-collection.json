@@ -1,0 +1,130 @@
+{
+  "info": {
+    "name": "Admin Module - Mini Collection",
+    "_postman_id": "a7c3f9e2-52d8-4f1e-b12c-8e4f3d2a9b5e",
+    "description": "Mini collection for Admin endpoints only.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "userId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "1) Get All Users (GET /api/admin/users)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/users",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "users"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Response is array', function () { pm.expect(pm.response.json()).to.be.an('array'); });",
+              "if (pm.response.json().length > 0) {",
+              "  pm.collectionVariables.set('userId', pm.response.json()[0].id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2) Get User By ID (GET /api/admin/users/{id})",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/users/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "users", "{{userId}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+              "const user = pm.response.json();",
+              "pm.test('Response has user fields', function () {",
+              "  pm.expect(user.id).to.exist;",
+              "  pm.expect(user.email).to.exist;",
+              "  pm.expect(user.role).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "3) Get Dashboard Stats (GET /api/admin/dashboard)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/dashboard",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "dashboard"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+              "const stats = pm.response.json();",
+              "pm.test('Dashboard has all stats', function () {",
+              "  pm.expect(stats.totalUsers).to.exist;",
+              "  pm.expect(stats.activeUsers).to.exist;",
+              "  pm.expect(stats.deletedUsers).to.exist;",
+              "  pm.expect(stats.totalRentals).to.exist;",
+              "  pm.expect(stats.activeRentals).to.exist;",
+              "  pm.expect(stats.overdueRentals).to.exist;",
+              "  pm.expect(stats.totalPayments).to.exist;",
+              "  pm.expect(stats.successPayments).to.exist;",
+              "  pm.expect(stats.pendingPayments).to.exist;",
+              "  pm.expect(stats.totalRevenue).to.exist;",
+              "  pm.expect(stats.pendingRevenue).to.exist;",
+              "});",
+              "console.log('Total Users: ' + stats.totalUsers);",
+              "console.log('Total Revenue: ₹' + stats.totalRevenue);",
+              "console.log('Pending Revenue: ₹' + stats.pendingRevenue);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4) Deactivate User (DELETE /api/admin/users/{id})",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/users/{{userId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "users", "{{userId}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 204 (No Content)', function () { pm.response.to.have.status(204); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+
