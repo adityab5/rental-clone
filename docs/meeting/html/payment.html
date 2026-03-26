@@ -1,0 +1,59 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Payment API</title>
+<style>
+body { font-family: Segoe UI, Arial, sans-serif; margin: 36px; color: #1f2937; }
+h1 { margin: 0 0 6px 0; font-size: 28px; }
+.meta { color: #4b5563; margin-bottom: 18px; }
+h2 { margin-top: 24px; font-size: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; }
+h3 { margin-top: 18px; font-size: 16px; }
+table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+th, td { border: 1px solid #d1d5db; text-align: left; padding: 8px; vertical-align: top; }
+th { background: #f3f4f6; }
+code { background: #f9fafb; padding: 2px 4px; border-radius: 4px; }
+pre { background: #111827; color: #f9fafb; padding: 12px; border-radius: 8px; white-space: pre-wrap; }
+.note { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 10px 12px; border-radius: 4px; }
+.footer { margin-top: 26px; font-size: 12px; color: #6b7280; }
+</style>
+</head>
+<body>
+<h1>Payment Module</h1>
+<div class="meta"><strong>Base Path:</strong> <code>/api/payments</code></div>
+<div class="note">Razorpay order creation and payment verification with HMAC SHA256 signature validation.</div>
+
+<h2>Endpoints</h2>
+<table>
+<thead><tr><th>Method</th><th>Path</th><th>Role</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>POST</code></td><td><code>/create-order</code></td><td>USER</td><td>Create Razorpay order and persist payment as PENDING.</td></tr>
+<tr><td><code>POST</code></td><td><code>/verify</code></td><td>USER</td><td>Verify Razorpay signature and finalize payment SUCCESS/FAILED.</td></tr>
+</tbody>
+</table>
+
+<h2>Request Samples</h2>
+<h3>Create order</h3><p><strong>Endpoint:</strong> <code>POST /api/payments/create-order</code></p><pre>{
+  &quot;rentalId&quot;: 1
+}</pre>
+<h3>Verify payment</h3><p><strong>Endpoint:</strong> <code>POST /api/payments/verify</code></p><pre>{
+  &quot;rentalId&quot;: 1,
+  &quot;razorpayOrderId&quot;: &quot;order_9A33XWu170gUtm&quot;,
+  &quot;razorpayPaymentId&quot;: &quot;pay_29QQoUBi66xm2f&quot;,
+  &quot;razorpaySignature&quot;: &quot;generated_hmac_signature&quot;
+}</pre>
+
+<h2>Flow (Service-Level)</h2>
+<ol><li>Create-order fetches rental and validates amount &gt; 0.</li>
+<li>PaymentService calls Razorpay client to create order using amount in paise.</li>
+<li>Order id is persisted as gatewayRef and status is set to PENDING.</li>
+<li>Verify endpoint recomputes HMAC of orderId|paymentId with keySecret.</li>
+<li>Invalid signature marks payment FAILED and throws 400.</li>
+<li>Valid signature marks payment SUCCESS, stores paidAt, and triggers success email notification.</li></ol>
+
+<h2>Error Handling</h2>
+<p>Validation and business exceptions are returned in a consistent error format from <code>GlobalExceptionHandler</code> with fields: timestamp, status, error, message, path, and validationErrors.</p>
+
+<div class="footer">Generated on 2026-03-27 00:57:13 from current backend implementation.</div>
+</body>
+</html>

@@ -1,0 +1,51 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Notification API</title>
+<style>
+body { font-family: Segoe UI, Arial, sans-serif; margin: 36px; color: #1f2937; }
+h1 { margin: 0 0 6px 0; font-size: 28px; }
+.meta { color: #4b5563; margin-bottom: 18px; }
+h2 { margin-top: 24px; font-size: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; }
+h3 { margin-top: 18px; font-size: 16px; }
+table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+th, td { border: 1px solid #d1d5db; text-align: left; padding: 8px; vertical-align: top; }
+th { background: #f3f4f6; }
+code { background: #f9fafb; padding: 2px 4px; border-radius: 4px; }
+pre { background: #111827; color: #f9fafb; padding: 12px; border-radius: 8px; white-space: pre-wrap; }
+.note { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 10px 12px; border-radius: 4px; }
+.footer { margin-top: 26px; font-size: 12px; color: #6b7280; }
+</style>
+</head>
+<body>
+<h1>Notification Module</h1>
+<div class="meta"><strong>Base Path:</strong> <code>/api/notifications</code></div>
+<div class="note">Email notification API for payment success confirmation using configured SMTP.</div>
+
+<h2>Endpoints</h2>
+<table>
+<thead><tr><th>Method</th><th>Path</th><th>Role</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>POST</code></td><td><code>/</code></td><td>USER</td><td>Send payment success email for a rental with SUCCESS status.</td></tr>
+</tbody>
+</table>
+
+<h2>Request Samples</h2>
+<h3>Send payment success notification</h3><p><strong>Endpoint:</strong> <code>POST /api/notifications/</code></p><pre>{
+  &quot;rentalId&quot;: 1
+}</pre>
+
+<h2>Flow (Service-Level)</h2>
+<ol><li>Fetch payment by rentalId.</li>
+<li>Reject request unless payment status is SUCCESS.</li>
+<li>If notification.mail.enabled=false, email send is skipped safely.</li>
+<li>If enabled, JavaMailSender sends message to payer email.</li>
+<li>Returns delivery metadata in NotificationResponse.</li></ol>
+
+<h2>Error Handling</h2>
+<p>Validation and business exceptions are returned in a consistent error format from <code>GlobalExceptionHandler</code> with fields: timestamp, status, error, message, path, and validationErrors.</p>
+
+<div class="footer">Generated on 2026-03-27 00:57:19 from current backend implementation.</div>
+</body>
+</html>

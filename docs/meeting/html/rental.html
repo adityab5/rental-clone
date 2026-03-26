@@ -1,0 +1,58 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Rental API</title>
+<style>
+body { font-family: Segoe UI, Arial, sans-serif; margin: 36px; color: #1f2937; }
+h1 { margin: 0 0 6px 0; font-size: 28px; }
+.meta { color: #4b5563; margin-bottom: 18px; }
+h2 { margin-top: 24px; font-size: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; }
+h3 { margin-top: 18px; font-size: 16px; }
+table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+th, td { border: 1px solid #d1d5db; text-align: left; padding: 8px; vertical-align: top; }
+th { background: #f3f4f6; }
+code { background: #f9fafb; padding: 2px 4px; border-radius: 4px; }
+pre { background: #111827; color: #f9fafb; padding: 12px; border-radius: 8px; white-space: pre-wrap; }
+.note { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 10px 12px; border-radius: 4px; }
+.footer { margin-top: 26px; font-size: 12px; color: #6b7280; }
+</style>
+</head>
+<body>
+<h1>Rental Module</h1>
+<div class="meta"><strong>Base Path:</strong> <code>/api/rentals</code></div>
+<div class="note">Rental lifecycle APIs: create rental, fetch details, return equipment, and track overdue records.</div>
+
+<h2>Endpoints</h2>
+<table>
+<thead><tr><th>Method</th><th>Path</th><th>Role</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>POST</code></td><td><code>/</code></td><td>USER</td><td>Create rental after user/equipment checks and date validation.</td></tr>
+<tr><td><code>GET</code></td><td><code>/{id}</code></td><td>USER</td><td>Get rental detail by id.</td></tr>
+<tr><td><code>POST</code></td><td><code>/{id}/return</code></td><td>USER</td><td>Mark rental returned and set equipment available.</td></tr>
+<tr><td><code>GET</code></td><td><code>/</code></td><td>ADMIN</td><td>List all rentals ordered by createdAt desc.</td></tr>
+<tr><td><code>GET</code></td><td><code>/overdue</code></td><td>ADMIN</td><td>List overdue ACTIVE rentals (endDate before today).</td></tr>
+</tbody>
+</table>
+
+<h2>Request Samples</h2>
+<h3>Create rental</h3><p><strong>Endpoint:</strong> <code>POST /api/rentals/</code></p><pre>{
+  &quot;userId&quot;: 2,
+  &quot;equipmentId&quot;: 1,
+  &quot;startDate&quot;: &quot;2026-03-28&quot;,
+  &quot;endDate&quot;: &quot;2026-03-30&quot;
+}</pre>
+
+<h2>Flow (Service-Level)</h2>
+<ol><li>Validate start and end date range.</li>
+<li>Ensure user and equipment are present and not soft-deleted.</li>
+<li>Check equipment availability and overlapping active rentals.</li>
+<li>Compute totalCost as dailyRate x inclusive rental days.</li>
+<li>Persist rental as ACTIVE and flip equipment.isAvailable to false.</li></ol>
+
+<h2>Error Handling</h2>
+<p>Validation and business exceptions are returned in a consistent error format from <code>GlobalExceptionHandler</code> with fields: timestamp, status, error, message, path, and validationErrors.</p>
+
+<div class="footer">Generated on 2026-03-27 00:57:11 from current backend implementation.</div>
+</body>
+</html>
