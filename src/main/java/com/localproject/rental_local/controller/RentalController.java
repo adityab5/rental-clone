@@ -1,7 +1,7 @@
 package com.localproject.rental_local.controller;
 
-import com.localproject.rental_local.dto.CreateRentalRequest;
-import com.localproject.rental_local.dto.RentalDto;
+import com.localproject.rental_local.dto.request.CreateRentalRequest;
+import com.localproject.rental_local.dto.response.RentalDto;
 import com.localproject.rental_local.service.RentalService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -48,4 +48,3 @@ public class RentalController {
         return rentalService.listOverdueRentals();
     }
 }
-

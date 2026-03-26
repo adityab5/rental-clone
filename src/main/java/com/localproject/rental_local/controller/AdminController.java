@@ -1,7 +1,7 @@
 package com.localproject.rental_local.controller;
 
-import com.localproject.rental_local.dto.AdminDashboardDto;
-import com.localproject.rental_local.dto.AdminUserDto;
+import com.localproject.rental_local.dto.response.AdminDashboardDto;
+import com.localproject.rental_local.dto.response.AdminUserDto;
 import com.localproject.rental_local.service.AdminService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -41,4 +41,3 @@ public class AdminController {
         return adminService.getDashboardStats();
     }
 }
-

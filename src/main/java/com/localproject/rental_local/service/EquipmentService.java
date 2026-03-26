@@ -1,6 +1,6 @@
 package com.localproject.rental_local.service;
 
-import com.localproject.rental_local.dto.EquipmentDto;
+import com.localproject.rental_local.dto.response.EquipmentDto;
 import com.localproject.rental_local.entity.Equipment;
 import com.localproject.rental_local.enums.EquipmentCategory;
 import com.localproject.rental_local.repository.EquipmentRepository;
@@ -34,4 +34,3 @@ public class EquipmentService {
         );
     }
 }
-

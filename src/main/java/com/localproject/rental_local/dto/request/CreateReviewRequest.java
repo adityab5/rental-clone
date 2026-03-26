@@ -1,4 +1,4 @@
-package com.localproject.rental_local.dto;
+package com.localproject.rental_local.dto.request;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -12,4 +12,5 @@ public record CreateReviewRequest(
         @Size(max = 2000) String comment
 ) {
 }
+
 

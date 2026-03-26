@@ -1,7 +1,7 @@
 package com.localproject.rental_local.service;
 
-import com.localproject.rental_local.dto.CreateReviewRequest;
-import com.localproject.rental_local.dto.ReviewDto;
+import com.localproject.rental_local.dto.request.CreateReviewRequest;
+import com.localproject.rental_local.dto.response.ReviewDto;
 import com.localproject.rental_local.entity.Equipment;
 import com.localproject.rental_local.entity.Review;
 import com.localproject.rental_local.entity.User;
@@ -77,4 +77,3 @@ public class ReviewService {
         );
     }
 }
-

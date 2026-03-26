@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import com.localproject.rental_local.dto.AdminDashboardDto;
-import com.localproject.rental_local.dto.AdminUserDto;
+import com.localproject.rental_local.dto.response.AdminDashboardDto;
+import com.localproject.rental_local.dto.response.AdminUserDto;
 import com.localproject.rental_local.entity.User;
 import com.localproject.rental_local.enums.PaymentStatus;
 import com.localproject.rental_local.enums.Role;

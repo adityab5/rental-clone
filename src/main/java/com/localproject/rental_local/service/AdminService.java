@@ -1,7 +1,7 @@
 package com.localproject.rental_local.service;
 
-import com.localproject.rental_local.dto.AdminDashboardDto;
-import com.localproject.rental_local.dto.AdminUserDto;
+import com.localproject.rental_local.dto.response.AdminDashboardDto;
+import com.localproject.rental_local.dto.response.AdminUserDto;
 import com.localproject.rental_local.entity.User;
 import com.localproject.rental_local.enums.PaymentStatus;
 import com.localproject.rental_local.enums.RentalStatus;
@@ -99,4 +99,3 @@ public class AdminService {
         );
     }
 }
-

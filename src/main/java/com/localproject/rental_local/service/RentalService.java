@@ -1,7 +1,7 @@
 package com.localproject.rental_local.service;
 
-import com.localproject.rental_local.dto.CreateRentalRequest;
-import com.localproject.rental_local.dto.RentalDto;
+import com.localproject.rental_local.dto.request.CreateRentalRequest;
+import com.localproject.rental_local.dto.response.RentalDto;
 import com.localproject.rental_local.entity.Equipment;
 import com.localproject.rental_local.entity.Rental;
 import com.localproject.rental_local.entity.User;

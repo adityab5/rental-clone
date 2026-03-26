@@ -1,4 +1,4 @@
-package com.localproject.rental_local.dto;
+package com.localproject.rental_local.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -10,4 +10,5 @@ public record CreateRentalRequest(
         @NotNull LocalDate endDate
 ) {
 }
+
 

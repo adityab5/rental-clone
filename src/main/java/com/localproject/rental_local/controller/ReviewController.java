@@ -1,7 +1,7 @@
 package com.localproject.rental_local.controller;
 
-import com.localproject.rental_local.dto.CreateReviewRequest;
-import com.localproject.rental_local.dto.ReviewDto;
+import com.localproject.rental_local.dto.request.CreateReviewRequest;
+import com.localproject.rental_local.dto.response.ReviewDto;
 import com.localproject.rental_local.service.ReviewService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -45,4 +45,3 @@ public class ReviewController {
         reviewService.deleteReview(id);
     }
 }
-

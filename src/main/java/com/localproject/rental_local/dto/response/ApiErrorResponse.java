@@ -1,4 +1,4 @@
-package com.localproject.rental_local.dto;
+package com.localproject.rental_local.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,4 +12,5 @@ public record ApiErrorResponse(
         List<String> validationErrors
 ) {
 }
+
 

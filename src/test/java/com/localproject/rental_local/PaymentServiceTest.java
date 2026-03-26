@@ -3,10 +3,12 @@ package com.localproject.rental_local;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
 
 import com.localproject.rental_local.config.RazorpayProperties;
-import com.localproject.rental_local.dto.CreatePaymentOrderRequest;
-import com.localproject.rental_local.dto.VerifyPaymentRequest;
+import com.localproject.rental_local.dto.request.CreatePaymentOrderRequest;
+import com.localproject.rental_local.dto.request.VerifyPaymentRequest;
 import com.localproject.rental_local.entity.Payment;
 import com.localproject.rental_local.entity.Rental;
 import com.localproject.rental_local.entity.User;
@@ -14,6 +16,7 @@ import com.localproject.rental_local.enums.PaymentStatus;
 import com.localproject.rental_local.exception.InvalidPaymentSignatureException;
 import com.localproject.rental_local.repository.PaymentRepository;
 import com.localproject.rental_local.repository.RentalRepository;
+import com.localproject.rental_local.service.NotificationService;
 import com.localproject.rental_local.service.PaymentService;
 import com.localproject.rental_local.service.gateway.RazorpayGatewayClient;
 import com.localproject.rental_local.service.gateway.RazorpayOrderResult;
@@ -44,6 +47,9 @@ class PaymentServiceTest {
 
     @Mock
     private HmacSHA256Util hmacSHA256Util;
+
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private PaymentService paymentService;
@@ -90,6 +96,7 @@ class PaymentServiceTest {
 
         assertEquals(PaymentStatus.SUCCESS, response.status());
         assertEquals(true, response.verified());
+        verify(notificationService).sendPaymentSuccessEmail(payment);
     }
 
     @Test
@@ -112,6 +119,7 @@ class PaymentServiceTest {
                 InvalidPaymentSignatureException.class,
                 () -> paymentService.verifyPayment(new VerifyPaymentRequest(1L, "order_test_1", "pay_test_1", "sig_test_1"))
         );
+        verify(notificationService, never()).sendPaymentSuccessEmail(payment);
     }
 
     private Rental sampleRental(Long rentalId, BigDecimal totalCost) {
@@ -127,5 +135,3 @@ class PaymentServiceTest {
         return rental;
     }
 }
-
-

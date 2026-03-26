@@ -1,9 +1,9 @@
 package com.localproject.rental_local.controller;
 
-import com.localproject.rental_local.dto.CreatePaymentOrderRequest;
-import com.localproject.rental_local.dto.CreatePaymentOrderResponse;
-import com.localproject.rental_local.dto.VerifyPaymentRequest;
-import com.localproject.rental_local.dto.VerifyPaymentResponse;
+import com.localproject.rental_local.dto.request.CreatePaymentOrderRequest;
+import com.localproject.rental_local.dto.request.VerifyPaymentRequest;
+import com.localproject.rental_local.dto.response.CreatePaymentOrderResponse;
+import com.localproject.rental_local.dto.response.VerifyPaymentResponse;
 import com.localproject.rental_local.service.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,4 +36,3 @@ public class PaymentController {
         return paymentService.verifyPayment(request);
     }
 }
-

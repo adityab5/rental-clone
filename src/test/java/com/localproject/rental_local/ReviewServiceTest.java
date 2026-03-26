@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.localproject.rental_local.dto.CreateReviewRequest;
+import com.localproject.rental_local.dto.request.CreateReviewRequest;
 import com.localproject.rental_local.entity.Equipment;
 import com.localproject.rental_local.entity.Review;
 import com.localproject.rental_local.entity.User;
@@ -152,4 +152,3 @@ class ReviewServiceTest {
         return equipment;
     }
 }
-

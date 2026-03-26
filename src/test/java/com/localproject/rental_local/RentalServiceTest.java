@@ -9,7 +9,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.localproject.rental_local.dto.CreateRentalRequest;
+import com.localproject.rental_local.dto.request.CreateRentalRequest;
 import com.localproject.rental_local.entity.Equipment;
 import com.localproject.rental_local.entity.Rental;
 import com.localproject.rental_local.entity.User;
@@ -149,4 +149,3 @@ class RentalServiceTest {
         return equipment;
     }
 }
-

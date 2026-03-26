@@ -1,6 +1,6 @@
 package com.localproject.rental_local.controller;
 
-import com.localproject.rental_local.dto.EquipmentDto;
+import com.localproject.rental_local.dto.response.EquipmentDto;
 import com.localproject.rental_local.enums.EquipmentCategory;
 import com.localproject.rental_local.service.EquipmentService;
 import java.util.List;
@@ -24,4 +24,3 @@ public class EquipmentController {
         return equipmentService.listAvailableEquipment(category);
     }
 }
-

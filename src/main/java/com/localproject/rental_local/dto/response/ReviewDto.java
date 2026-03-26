@@ -1,4 +1,4 @@
-package com.localproject.rental_local.dto;
+package com.localproject.rental_local.dto.response;
 
 import java.time.LocalDateTime;
 
@@ -11,4 +11,5 @@ public record ReviewDto(
         LocalDateTime createdAt
 ) {
 }
+
 

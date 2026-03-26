@@ -1,4 +1,4 @@
-package com.localproject.rental_local.dto;
+package com.localproject.rental_local.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,4 +10,5 @@ public record VerifyPaymentRequest(
         @NotBlank String razorpaySignature
 ) {
 }
+
 

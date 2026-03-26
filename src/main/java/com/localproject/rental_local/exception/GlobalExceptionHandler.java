@@ -1,6 +1,6 @@
 package com.localproject.rental_local.exception;
 
-import com.localproject.rental_local.dto.ApiErrorResponse;
+import com.localproject.rental_local.dto.response.ApiErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -82,5 +82,3 @@ public class GlobalExceptionHandler {
         return fieldError.getField() + ": " + fieldError.getDefaultMessage();
     }
 }
-
-

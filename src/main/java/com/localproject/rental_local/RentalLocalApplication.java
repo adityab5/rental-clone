@@ -12,7 +12,7 @@ public class RentalLocalApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RentalLocalApplication.class, args);
 	}
-	@GetMapping("/hello")
+	@GetMapping({"/hello", "/api/hello"})
 	public String hello() {
 		return "Hello, World!";
 	}
